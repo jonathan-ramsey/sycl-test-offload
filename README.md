@@ -17,30 +17,38 @@ Starting from the root directory of this repo.
 - In a fresh command prompt, invoke the `setvars.bat` script from your oneAPI installation (e.g. "`C:\Program Files (x86)\Intel\oneAPI\setvars.bat`")
 - `cd lib`
 - `mkdir build && cd build`
-- `cmake -GNinja .. -DBOOST_ROOT=c:\dev\boost -DCMAKE_INSTALL_PREFIX=c:\dev\sycl-test-offload --fresh`
+- `cmake -G"Ninja Multi-Config" .. -DBOOST_ROOT=c:\dev\code -DCMAKE_INSTALL_PREFIX=c:\dev\sycl-test-offload --fresh`
 - `cmake --build . --config Debug --clean-first`
 - `ninja install`
 
-**Make sure you update the paths for your own system.**
+**NB: Make sure you update the paths for your own system.**
 
 #### Option B: Custom build of the `sycl` branch of the `intel/llvm` github repo.
 
-- In a fresh command prompt, invoke the `set_env_vars_clang.bat` script in the root directory of this repo (NB: Be sure to update paths for your own system!)
-- 
+- In a fresh command prompt, invoke the `set_env_vars_clang.bat` script in the root directory of this repo (NB: Be sure to update paths to point to where you built the intel/llvm SYCL-enabled compiler!)
+- `cmake -G"Ninja Multi-Config" .. -DBOOST_ROOT=c:\dev\code -DCMAKE_INSTALL_PREFIX=c:\dev\sycl-test-offload -DCMAKE_C_COMPILER=clang-cl.exe -DCMAKE_CXX_COMPILER=clang-cl.exe --fresh`
+- `cmake --build . --config Debug --clean-first `
+- `ninja install`
 
 ### Step 2: Compile the non-SYCL test program
 
 Starting from the root directory of this repo.
 
 - `mkdir build && cd build`
-- `cmake -GNinja .. -DBOOST_ROOT=c:\dev\code -DCMAKE_INSTALL_PREFIX=c:\dev\sycl-test-offload --fresh`
+- If using a self-built `intel/llvm` Clang:
+  - `cmake -G"Ninja Multi-Config" .. -DBOOST_ROOT=c:\dev\code -DCMAKE_INSTALL_PREFIX=c:\dev\sycl-test-offload -DCMAKE_C_COMPILER=clang-cl.exe -DCMAKE_CXX_COMPILER=clang-cl.exe --fresh`
+- If using oneAPI:
+  - `cmake -G"Ninja Multi-Config" .. -DBOOST_ROOT=c:\dev\code -DCMAKE_INSTALL_PREFIX=c:\dev\sycl-test-offload --fresh`
+- If using MSVC/CL:
+  - `cmake -G "Visual Studio 17 2022" .. -DBOOST_ROOT=c:\dev\code -DCMAKE_INSTALL_PREFIX=c:\dev\sycl-test-offload --fresh`
 - `cmake --build . --config Debug --clean-first`
-- `ninja install`
+- `ninja install` (if using MSVC, add a `--target INSTALL` to the build command instead)
 
 ### Step 3: Running the test program
 
 - Change to the `bin` directory off of the root directory of this repository;
-- Run `sycl-test-offload.exe`
+- Invoke `set ONEAPI_DEVICE_SELECTOR=opencl:cpu` (this is intentional for testing purposes)
+- Run `sycl_test_offload.exe`
 
 Expected output:
 

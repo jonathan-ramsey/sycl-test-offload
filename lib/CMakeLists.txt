@@ -14,7 +14,7 @@ project (sycl_test_lib)
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
   message(STATUS "Resetting shared library macro...")
   message(STATUS "Was: ${CMAKE_CXX_CREATE_SHARED_LIBRARY}")
-  set(CMAKE_CXX_CREATE_SHARED_LIBRARY "${_CMAKE_VS_LINK_DLL}<CMAKE_CXX_COMPILER> ${CMAKE_CL_NOLOGO} <CMAKE_CXX_LINK_FLAGS> <OBJECTS> ${CMAKE_START_TEMP_FILE} -LD -link <LINK_FLAGS> <LINK_LIBRARIES> -link /out:<TARGET> /implib:<TARGET_IMPLIB> /pdb:<TARGET_PDB> /version:<TARGET_VERSION_MAJOR>.<TARGET_VERSION_MINOR>${_PLATFORM_LINK_FLAGS} ${CMAKE_END_TEMP_FILE}")
+  set(CMAKE_CXX_CREATE_SHARED_LIBRARY "${_CMAKE_VS_LINK_DLL}<CMAKE_CXX_COMPILER> ${CMAKE_CL_NOLOGO} <CMAKE_CXX_LINK_FLAGS> <OBJECTS> ${CMAKE_START_TEMP_FILE} -LD /link <LINK_FLAGS> <LINK_LIBRARIES> /out:<TARGET> /implib:<TARGET_IMPLIB> /pdb:<TARGET_PDB> /version:<TARGET_VERSION_MAJOR>.<TARGET_VERSION_MINOR>${_PLATFORM_LINK_FLAGS} ${CMAKE_END_TEMP_FILE}")
 endif()
 message(STATUS "Current value: ${CMAKE_CXX_CREATE_SHARED_LIBRARY}")
 
@@ -34,22 +34,16 @@ set_target_properties(sycl_test_lib PROPERTIES DEBUG_POSTFIX "_d")
 
 # SYCL-specific stuff
 if (CMAKE_CXX_COMPILER_ID STREQUAL "IntelLLVM")
- #find_package(IntelSYCL REQUIRED)
- #add_sycl_to_target(TARGET sycl_test_lib SOURCES ${SOURCES})
- set(INTEL_ONEAPI_ROOT "$ENV{CMPLR_ROOT}")
- target_compile_options(sycl_test_lib PRIVATE -fsycl -relaxed-aliasing /Qno-intel-lib)# -fsycl-targets=nvptx64-nvidia-cuda,spir64-unknown-unknown)
- target_compile_options(sycl_test_lib PRIVATE -v)
- target_link_directories(sycl_test_lib PRIVATE ${INTEL_ONEAPI_ROOT}/windows/lib)
- target_link_options(sycl_test_lib PRIVATE -fsycl /Qno-intel-lib)# -fsycl-targets=nvptx64-nvidia-cuda,spir64-unknown-unknown)
- target_link_options(sycl_test_lib PRIVATE -v)
+ find_package(IntelSYCL REQUIRED)
+ add_sycl_to_target(TARGET sycl_test_lib SOURCES ${SOURCES})
 else (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
  find_package(Clang REQUIRED)
- target_compile_options(sycl_test_lib PRIVATE -fsycl -Xclang=-disable-llvm-verifier -Xclang=-discard-value-names)# -fsycl-targets=nvptx64-nvidia-cuda,spir64-unknown-unknown)
- target_compile_options(sycl_test_lib PRIVATE -v)
- target_compile_options(sycl_test_lib PRIVATE)
+ target_compile_options(sycl_test_lib PUBLIC
+    -std:c++20
+    -fsycl -fsycl-targets=nvptx64-nvidia-cuda,spir64-unknown-unknown)
  target_link_directories(sycl_test_lib PRIVATE $ENV{DPCPP_HOME}/llvm/build/lib)
- target_link_options(sycl_test_lib PRIVATE -fsycl)# -fsycl-targets=nvptx64-nvidia-cuda,spir64-unknown-unknown)
- target_link_options(sycl_test_lib PRIVATE -v)
+ set(CMAKE_CXX_LINK_FLAGS "-v -fsycl -fsycl-targets=nvptx64-nvidia-cuda,spir64-unknown-unknown")
+ set(CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_LINK_FLAGS} -g /WX")
 endif()
 
 # Setup Boost Path Variables.

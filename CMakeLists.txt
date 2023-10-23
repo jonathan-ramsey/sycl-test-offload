@@ -36,6 +36,8 @@ add_executable(sycl_test_offload ${SOURCES} )
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
  find_package(Clang REQUIRED)
  target_compile_options(sycl_test_offload PRIVATE -std:c++20)
+else (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+ target_compile_options(sycl_test_offload PRIVATE /std:c++20 /EHsc)
 endif()
 
 # Link these libraries.
