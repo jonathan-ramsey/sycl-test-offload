@@ -23,7 +23,7 @@ public:
 	SyclOffload();
 	virtual ~SyclOffload();
 
-	virtual int offload() override;
+	virtual int offload(int n_elements) override;
 	virtual std::string pluginName() override;
 	virtual std::string versionString() override;
 };

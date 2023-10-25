@@ -15,7 +15,7 @@ class BaseSyclClass {
   public:
       virtual std::string pluginName() = 0;
       virtual std::string versionString() = 0;
-      virtual int offload() = 0;
+      virtual int offload(int n_elements) = 0;
   };
 
 #endif

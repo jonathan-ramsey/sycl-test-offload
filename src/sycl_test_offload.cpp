@@ -10,6 +10,7 @@
 #include <iostream>
 #include <filesystem>
 #include <string_view>
+#include <chrono>
 
 #include "base_sycl_api.hpp"
 
@@ -32,7 +33,14 @@ int main(int argc, char* argv[]) {
 	std::cout << "Loaded plugin: " << plugin->pluginName() << std::endl;
 
 	std::cout << "Offloading time!" << std::endl;
-	int result = plugin->offload();
+	int n_elements = 5e8;
+	std::cout << "n_elements = " << std::to_string(n_elements) << std::endl;
+	auto start = std::chrono::high_resolution_clock::now();
+	int result = plugin->offload(n_elements);
+	auto stop = std::chrono::high_resolution_clock::now();
+
+	auto delta = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+	std::cout << "Time spent (DLL offload): " << delta.count() << " milliseconds" << std::endl;
 
 	return 0;
 
