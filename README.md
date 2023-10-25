@@ -22,7 +22,7 @@ Starting from the root directory of this repo.
 - `mkdir build && cd build`
 - `cmake -G"Ninja Multi-Config" .. -DBOOST_ROOT=c:\dev\code -DCMAKE_INSTALL_PREFIX=c:\dev\sycl-test-offload --fresh`
 - `cmake --build . --config Debug --clean-first`
-- `ninja install`
+- `ninja -f build-Debug.ninja install`
 
 **NB: Make sure you update the paths for your own system.**
 
@@ -31,7 +31,7 @@ Starting from the root directory of this repo.
 - In a fresh command prompt, invoke the `set_env_vars_clang.bat` script in the root directory of this repo (NB: Be sure to update paths to point to where you built the intel/llvm SYCL-enabled compiler!)
 - `cmake -G"Ninja Multi-Config" .. -DBOOST_ROOT=c:\dev\code -DCMAKE_INSTALL_PREFIX=c:\dev\sycl-test-offload -DCMAKE_C_COMPILER=clang-cl.exe -DCMAKE_CXX_COMPILER=clang-cl.exe --fresh`
 - `cmake --build . --config Debug --clean-first`
-- `ninja install`
+- `ninja -f build-Debug.ninja install`
 
 ### Step 2: Compile the non-SYCL test program
 
