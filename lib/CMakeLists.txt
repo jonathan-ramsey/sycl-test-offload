@@ -39,11 +39,14 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "IntelLLVM")
 else (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
  find_package(Clang REQUIRED)
  target_compile_options(sycl_test_lib PUBLIC
-    -std:c++20
+    -std:c++20 -v
     -fsycl -fsycl-targets=nvptx64-nvidia-cuda,spir64-unknown-unknown)
+    #-Xsycl-target-backend=nvptx64-nvidia-cuda --cuda-gpu-arch=sm_75)
  target_link_directories(sycl_test_lib PRIVATE $ENV{DPCPP_HOME}/llvm/build/lib)
  set(CMAKE_CXX_LINK_FLAGS "-v -fsycl -fsycl-targets=nvptx64-nvidia-cuda,spir64-unknown-unknown")
- set(CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_LINK_FLAGS} -g /WX")
+ #set(CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_LINK_FLAGS} -g /WX")
+ set(CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_LINK_FLAGS} /WX")
+ #set(CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_LINK_FLAGS} -Xsycl-target-backend=nvptx64-nvidia-cuda --cuda-gpu-arch=sm_75")
 endif()
 
 # Setup Boost Path Variables.
