@@ -57,19 +57,27 @@ Starting from the root directory of this repo.
 
 Expected output:
 
-    Attempting to load plugin: sycl_test_lib_d.dll
+    Attempting to load plugin: sycl_test_lib.dll
     Loaded plugin: SyclTestPlugin
     Offloading time!
+    n_elements = 500000000
+    Time spent (initialization; on host): 1118 milliseconds
     Running on Intel(R) Core(TM) i7-10875H CPU @ 2.30GHz
     Entering queue...
     Creating accessors.
     Starting computation.
-    Finished computation.
     Exited queue.
-      A { 1, 2, 3, 4 }
-    + B { 4, 3, 2, 1 }
+    Time spent (in offload, w/o data transfer): 374.693 milliseconds
+    Time spent (SYCL-related, inclusive): 1987 milliseconds
+    Check results:
+      A { 1, 2, 3 ... 5e+08, 5e+08, 5e+08 }
+    + B { 5e+08, 5e+08, 5e+08 ... 3, 2, 1 }
     ------------------
-    = C { 5, 5, 5, 5 }
+    = C { 5e+08, 5e+08, 5e+08 ... 5e+08, 5e+08, 5e+08 }
+
+Time spent (printing results): 3 milliseconds
+Time spent (in DLL): 3110 milliseconds
+Time spent (DLL offload): 3462 milliseconds
 
 NB: Naturally, the device name will change depending on your own system.
 

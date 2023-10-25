@@ -19,7 +19,7 @@
 
 int main(int argc, char* argv[]) {
 
-	std::string_view modulePath = "sycl_test_lib_d.dll";
+	std::string_view modulePath = "sycl_test_lib.dll";
 	boost::filesystem::path lib_path((std::string)modulePath);
 
 	boost::shared_ptr<BaseSyclClass> plugin;
